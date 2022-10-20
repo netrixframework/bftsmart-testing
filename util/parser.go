@@ -25,6 +25,7 @@ type BFTSmartMessage struct {
 	Epoch  int
 	Type   string
 	Value  []byte
+	Proof  []byte
 }
 
 var _ types.ParsedMessage = &BFTSmartMessage{}
@@ -35,6 +36,7 @@ func (m *BFTSmartMessage) Clone() types.ParsedMessage {
 		Epoch:  m.Epoch,
 		Type:   m.Type,
 		Value:  m.Value,
+		Proof:  m.Proof,
 	}
 }
 
