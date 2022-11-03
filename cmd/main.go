@@ -9,5 +9,6 @@ func RootCmd() *cobra.Command {
 	cmd.CompletionOptions.DisableDefaultCmd = true
 	cmd.AddCommand(unittestCmd)
 	cmd.AddCommand(strategyCmd())
+	cmd.AddCommand(ClientCmd())
 	return cmd
 }

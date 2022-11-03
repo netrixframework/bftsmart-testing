@@ -3,7 +3,7 @@ module github.com/netrixframework/bftsmart-testing
 go 1.18
 
 require (
-	github.com/netrixframework/netrix v0.2.3
+	github.com/netrixframework/netrix v0.2.7
 	github.com/spf13/cobra v1.6.0
 )
 

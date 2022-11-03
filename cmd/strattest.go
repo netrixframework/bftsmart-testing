@@ -6,6 +6,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/netrixframework/bftsmart-testing/client"
 	"github.com/netrixframework/bftsmart-testing/tests"
 	"github.com/netrixframework/bftsmart-testing/util"
 	"github.com/netrixframework/netrix/config"
@@ -32,8 +33,8 @@ func logStepFunc(e *types.Event, ctx *strategies.Context) {
 		"message": bftMessage.String(),
 		"from":    message.From,
 		"to":      message.To,
+		"type":    message.Type,
 	}).Info("Message received")
-
 }
 
 var stratTestCmd = &cobra.Command{
@@ -42,7 +43,11 @@ var stratTestCmd = &cobra.Command{
 		termCh := make(chan os.Signal, 1)
 		signal.Notify(termCh, os.Interrupt, syscall.SIGTERM)
 
-		var strategy strategies.Strategy = unittest.NewTestCaseStrategy(tests.DummyTest())
+		var strategy strategies.Strategy = unittest.NewTestCaseStrategy(tests.DummyTest(), "/Users/srinidhin/Local/data/testing/bftsmart/t")
+
+		bftsmartClient := client.NewBFTSmartClient(&client.BFTSmartClientConfig{
+			CodePath: "/Users/srinidhin/Local/github/bft-smart",
+		})
 
 		server := strategies.NewStrategyDriver(
 			&config.Config{
@@ -58,7 +63,10 @@ var stratTestCmd = &cobra.Command{
 			&strategies.StrategyConfig{
 				Iterations:       10,
 				IterationTimeout: 30 * time.Second,
-				StepFunc:         logStepFunc,
+				// StepFunc:         logStepFunc,
+				SetupFunc: func(ctx *strategies.Context) {
+					go bftsmartClient.Set("name", "srinidhi")
+				},
 			},
 		)
 
