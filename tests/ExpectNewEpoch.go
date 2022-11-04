@@ -8,13 +8,9 @@ import (
 	"github.com/netrixframework/netrix/testlib"
 )
 
-func DummyTest() *testlib.TestCase {
+func ExpectNewEpoch() *testlib.TestCase {
 	stateMachine := sm.NewStateMachine()
 	filters := testlib.NewFilterSet()
-
-	// filters.AddFilter(
-	// 	testlib.If(util.IsWrite().And(util.IsEpoch(1))).Then(util.PrintMessage(), testlib.DeliverMessage()),
-	// )
 
 	filters.AddFilter(
 		testlib.If(util.IsPropose().And(util.IsEpoch(0))).Then(testlib.DropMessage()),
@@ -22,4 +18,12 @@ func DummyTest() *testlib.TestCase {
 
 	testcase := testlib.NewTestCase("Dummy", 2*time.Minute, stateMachine, filters)
 	return testcase
+}
+
+func ExpectNewEpochProperty() *sm.StateMachine {
+	property := sm.NewStateMachine()
+	property.Builder().On(
+		util.IsNewEpoch(), sm.SuccessStateLabel,
+	)
+	return property
 }

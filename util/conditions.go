@@ -1,38 +1,32 @@
 package util
 
 import (
+	"strconv"
+
 	"github.com/netrixframework/netrix/sm"
 	"github.com/netrixframework/netrix/types"
 )
 
-func IsPropose() sm.Condition {
+func IsMessageType(t string) sm.Condition {
 	return func(e *types.Event, c *sm.Context) bool {
 		bftMessage, ok := GetParsedMessage(e, c)
 		if !ok {
 			return false
 		}
-		return bftMessage.Type() == "Propose"
+		return bftMessage.Type == t
 	}
+}
+
+func IsPropose() sm.Condition {
+	return IsMessageType(ProposeMessageType)
 }
 
 func IsWrite() sm.Condition {
-	return func(e *types.Event, c *sm.Context) bool {
-		bftMessage, ok := GetParsedMessage(e, c)
-		if !ok {
-			return false
-		}
-		return bftMessage.Type() == "Write"
-	}
+	return IsMessageType(WriteMessageType)
 }
 
 func IsAccept() sm.Condition {
-	return func(e *types.Event, c *sm.Context) bool {
-		bftMessage, ok := GetParsedMessage(e, c)
-		if !ok {
-			return false
-		}
-		return bftMessage.Type() == "Accept"
-	}
+	return IsMessageType(AcceptMessageType)
 }
 
 func IsEpoch(epoch int) sm.Condition {
@@ -52,5 +46,59 @@ func IsView(view int) sm.Condition {
 			return false
 		}
 		return bftMessage.Number == view
+	}
+}
+
+func IsNewEpoch() sm.Condition {
+	return func(e *types.Event, c *sm.Context) bool {
+		if !e.IsGeneric() {
+			return false
+		}
+		eType := e.Type.(*types.GenericEventType)
+		return eType.T == "NewEpoch"
+	}
+}
+
+func IsNewEpochOf(epoch int) sm.Condition {
+	return func(e *types.Event, c *sm.Context) bool {
+		if !e.IsGeneric() {
+			return false
+		}
+		eType := e.Type.(*types.GenericEventType)
+		if eType.T != "NewEpoch" {
+			return false
+		}
+		rEpoch, err := strconv.Atoi(eType.Params["epoch"])
+		if err != nil {
+			return false
+		}
+		return rEpoch == epoch
+	}
+}
+
+func IsDecided() sm.Condition {
+	return func(e *types.Event, c *sm.Context) bool {
+		if !e.IsGeneric() {
+			return false
+		}
+		eType := e.Type.(*types.GenericEventType)
+		return eType.T == "Decided"
+	}
+}
+
+func IsDecidedOf(epoch int) sm.Condition {
+	return func(e *types.Event, c *sm.Context) bool {
+		if !e.IsGeneric() {
+			return false
+		}
+		eType := e.Type.(*types.GenericEventType)
+		if eType.T != "Decided" {
+			return false
+		}
+		rEpoch, err := strconv.Atoi(eType.Params["epoch"])
+		if err != nil {
+			return false
+		}
+		return rEpoch == epoch
 	}
 }
