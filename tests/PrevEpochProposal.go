@@ -15,7 +15,7 @@ func RecordProposal(as string) testlib.Action {
 		if !ok {
 			return
 		}
-		if bftMessage.Type != util.ProposeMessageType {
+		if bftMessage.TypeString() != util.ProposeMessageType {
 			return
 		}
 		ctx.Vars.Set(as, string(bftMessage.Value))
@@ -23,8 +23,13 @@ func RecordProposal(as string) testlib.Action {
 	}
 }
 
-func DelayedPropose() *testlib.TestCase {
+func PrevEpochProposal() *testlib.TestCase {
 	filters := testlib.NewFilterSet()
+
+	filters.AddFilter(
+		testlib.If(util.IsPropose().And(util.IsEpoch(0))).Then(testlib.StoreInSet(sm.Set("delayedProposals"))),
+	)
+
 	filters.AddFilter(
 		testlib.If(util.IsNewEpoch()).Then(testlib.DeliverAllFromSet(sm.Set("delayedProposals"))),
 	)
@@ -33,7 +38,7 @@ func DelayedPropose() *testlib.TestCase {
 	return testCase
 }
 
-func DelayedProposeProperty() *sm.StateMachine {
+func PrevEpochProposalProperty() *sm.StateMachine {
 	property := sm.NewStateMachine()
 
 	property.Builder().On(

@@ -13,7 +13,7 @@ func IsMessageType(t string) sm.Condition {
 		if !ok {
 			return false
 		}
-		return bftMessage.Type == t
+		return bftMessage.TypeString() == t
 	}
 }
 

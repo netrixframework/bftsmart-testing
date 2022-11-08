@@ -7,5 +7,7 @@ func strategyCmd() *cobra.Command {
 		Use: "strat",
 	}
 	cmd.AddCommand(stratTestCmd)
+	cmd.AddCommand(pctTestStrategy)
+	cmd.AddCommand(pctStrategy)
 	return cmd
 }

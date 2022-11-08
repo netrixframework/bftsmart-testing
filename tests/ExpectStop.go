@@ -13,6 +13,13 @@ func ExpectStop() *testlib.TestCase {
 	filters := testlib.NewFilterSet()
 
 	filters.AddFilter(
+		testlib.If(util.IsMessageType(util.StopMessageType)).Then(
+			util.PrintMessage(),
+			testlib.DeliverMessage(),
+		),
+	)
+
+	filters.AddFilter(
 		testlib.If(util.IsAccept().And(util.IsEpoch(0)).And(sm.IsMessageTo(types.ReplicaID("3")))).Then(testlib.DropMessage()),
 	)
 

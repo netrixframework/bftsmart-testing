@@ -43,10 +43,13 @@ var stratTestCmd = &cobra.Command{
 		termCh := make(chan os.Signal, 1)
 		signal.Notify(termCh, os.Interrupt, syscall.SIGTERM)
 
-		var strategy strategies.Strategy = unittest.NewTestCaseStrategy(tests.ExpectNewEpoch(), "/home/nagendra/data/testing/bftsmart/t")
+		strategy := strategies.NewStrategyWithProperty(
+			unittest.NewTestCaseStrategy(tests.DelayProposeForP(), "/Users/srinidhin/Local/data/testing/bftsmart/t"),
+			tests.DelayProposeForPProperty(),
+		)
 
-		bftsmartClient := client.NewBFTSmartClient(&client.BFTSmartClientConfig{
-			CodePath: "/home/nagendra/code/bftsmart",
+		bftSmartClient := client.NewBFTSmartClient(&client.BFTSmartClientConfig{
+			CodePath: "/Users/srinidhin/Local/github/bft-smart",
 		})
 
 		server := strategies.NewStrategyDriver(
@@ -55,7 +58,7 @@ var stratTestCmd = &cobra.Command{
 				NumReplicas:   4,
 				LogConfig: config.LogConfig{
 					Format: "json",
-					Path:   "/home/nagendra/data/testing/bftsmart/t/checker.log",
+					Path:   "/Users/srinidhin/Local/data/testing/bftsmart/t/checker.log",
 				},
 			},
 			&util.BFTSmartParser{},
@@ -65,7 +68,7 @@ var stratTestCmd = &cobra.Command{
 				IterationTimeout: 30 * time.Second,
 				// StepFunc:         logStepFunc,
 				SetupFunc: func(ctx *strategies.Context) {
-					go bftsmartClient.Set("name", "srinidhi")
+					go bftSmartClient.Set("name", "srinidhi")
 				},
 			},
 		)
