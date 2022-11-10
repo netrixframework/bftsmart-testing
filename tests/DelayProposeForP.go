@@ -16,20 +16,20 @@ func DelayProposeForP() *testlib.TestCase {
 		testlib.If(util.IsWrite().And(util.IsEpoch(0))).Then(testlib.DropMessage()),
 	)
 
-	filters.AddFilter(
-		testlib.If(util.IsPropose().And(sm.IsMessageTo(types.ReplicaID("3"))).And(util.IsEpoch(0))).
-			Then(testlib.StoreInSet(sm.Set("reorderedPropose"))),
-	)
-	filters.AddFilter(
-		testlib.If(
-			sm.IsMessageReceive().
-				And(sm.IsMessageTo(types.ReplicaID("3"))).
-				And(util.IsPropose()).
-				And(util.IsEpoch(1)),
-		).Then(
-			testlib.DeliverAllFromSet(sm.Set("reorderedPropose")),
-		),
-	)
+	// filters.AddFilter(
+	// 	testlib.If(util.IsPropose().And(sm.IsMessageTo(types.ReplicaID("3"))).And(util.IsEpoch(0))).
+	// 		Then(testlib.StoreInSet(sm.Set("reorderedPropose"))),
+	// )
+	// filters.AddFilter(
+	// 	testlib.If(
+	// 		sm.IsMessageReceive().
+	// 			And(sm.IsMessageTo(types.ReplicaID("3"))).
+	// 			And(util.IsPropose()).
+	// 			And(util.IsEpoch(1)),
+	// 	).Then(
+	// 		testlib.DeliverAllFromSet(sm.Set("reorderedPropose")),
+	// 	),
+	// )
 
 	testCase := testlib.NewTestCase(
 		"DelayProposeForP",
