@@ -13,14 +13,11 @@ func ExpectStop() *testlib.TestCase {
 	filters := testlib.NewFilterSet()
 
 	filters.AddFilter(
-		testlib.If(util.IsMessageType(util.StopMessageType)).Then(
-			util.PrintMessage(),
-			testlib.DeliverMessage(),
-		),
-	)
-
-	filters.AddFilter(
-		testlib.If(util.IsAccept().And(util.IsEpoch(0)).And(sm.IsMessageTo(types.ReplicaID("3")))).Then(testlib.DropMessage()),
+		testlib.If(
+			util.IsAccept().
+				And(util.IsEpoch(0)).
+				And(sm.IsMessageTo(types.ReplicaID("3"))),
+		).Then(testlib.DropMessage()),
 	)
 
 	testCase := testlib.NewTestCase("ExpectStop", 2*time.Minute, ExpectStopProperty(), filters)
@@ -30,7 +27,8 @@ func ExpectStop() *testlib.TestCase {
 func ExpectStopProperty() *sm.StateMachine {
 	property := sm.NewStateMachine()
 	property.Builder().On(
-		util.IsMessageType(util.StopMessageType).And(sm.IsMessageFrom(types.ReplicaID("3"))),
+		util.IsMessageType(util.StopMessageType).
+			And(sm.IsMessageFrom(types.ReplicaID("3"))),
 		sm.SuccessStateLabel,
 	)
 

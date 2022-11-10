@@ -3,6 +3,7 @@ package util
 import (
 	"strconv"
 
+	"github.com/netrixframework/netrix/log"
 	"github.com/netrixframework/netrix/sm"
 	"github.com/netrixframework/netrix/types"
 )
@@ -13,6 +14,12 @@ func IsMessageType(t string) sm.Condition {
 		if !ok {
 			return false
 		}
+		messageID, _ := e.MessageID()
+		c.Logger.With(log.LogParams{
+			"message_type": bftMessage.TypeString(),
+			"expected":     t,
+			"message_id":   messageID,
+		}).Debug("Checking message type")
 		return bftMessage.TypeString() == t
 	}
 }
@@ -35,6 +42,12 @@ func IsEpoch(epoch int) sm.Condition {
 		if !ok {
 			return false
 		}
+		messageID, _ := e.MessageID()
+		c.Logger.With(log.LogParams{
+			"message_epoch": bftMessage.Epoch,
+			"expected":      epoch,
+			"message_id":    messageID,
+		}).Debug("Checking message epoch")
 		return bftMessage.Epoch == epoch
 	}
 }

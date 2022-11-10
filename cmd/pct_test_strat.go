@@ -27,7 +27,7 @@ var pctTestStrategy = &cobra.Command{
 				RandSrc:        rand.NewSource(time.Now().UnixMilli()),
 				MaxEvents:      1000,
 				Depth:          6,
-				RecordFilePath: "/home/nagendra/data/testing/bftsmart/t",
+				RecordFilePath: "/Users/srinidhin/Local/data/testing/bftsmart/t",
 			},
 			tests.DelayProposeForP(),
 		)
@@ -35,7 +35,7 @@ var pctTestStrategy = &cobra.Command{
 		strategy = strategies.NewStrategyWithProperty(strategy, tests.DelayProposeForPProperty())
 
 		bftSmartClient := client.NewBFTSmartClient(&client.BFTSmartClientConfig{
-			CodePath: "/home/nagendra/code/bftsmart",
+			CodePath: "/Users/srinidhin/Local/github/bft-smart",
 		})
 
 		driver := strategies.NewStrategyDriver(
@@ -45,14 +45,14 @@ var pctTestStrategy = &cobra.Command{
 				LogConfig: config.LogConfig{
 					Format: "json",
 					Level:  "info",
-					Path:   "/home/nagendra/data/testing/bftsmart/t/checker.log",
+					Path:   "/Users/srinidhin/Local/data/testing/bftsmart/t/checker.log",
 				},
 			},
 			&util.BFTSmartParser{},
 			strategy,
 			&strategies.StrategyConfig{
-				Iterations:       100,
-				IterationTimeout: 30 * time.Second,
+				Iterations:       30,
+				IterationTimeout: 15 * time.Second,
 				SetupFunc: func(ctx *strategies.Context) {
 					go bftSmartClient.Set("name", "srinidhi")
 				},

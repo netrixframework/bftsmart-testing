@@ -53,7 +53,7 @@ func (m *BFTSmartMessage) Clone() types.ParsedMessage {
 }
 
 func (m *BFTSmartMessage) TypeString() string {
-	if m.Type == 0 && m.PaxosType != 0 {
+	if m.PaxosType != 0 {
 		switch m.PaxosType {
 		case 44781:
 			return ProposeMessageType
@@ -80,7 +80,7 @@ func (m *BFTSmartMessage) Marshal() ([]byte, error) {
 }
 
 func (m *BFTSmartMessage) String() string {
-	return fmt.Sprintf("{Number: %d, Epoch: %d, Type: %s, Value: %v, Ts: %d, Sender: %d}", m.Number, m.Epoch, m.TypeString(), m.Value, m.Ts, m.Sender)
+	return fmt.Sprintf("{Number: %d, Epoch: %d, Type: %s, Value: %v, Ts: %d, Sender: %d, PaxosType: %d}", m.Number, m.Epoch, m.TypeString(), m.Value, m.Ts, m.Sender, m.PaxosType)
 }
 
 func GetParsedMessage(e *types.Event, c *sm.Context) (*BFTSmartMessage, bool) {

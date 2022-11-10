@@ -24,7 +24,7 @@ func DelayProposeForP() *testlib.TestCase {
 		testlib.If(
 			sm.IsMessageReceive().
 				And(sm.IsMessageTo(types.ReplicaID("3"))).
-				And(util.IsPropose()).
+				And(util.IsWrite()).
 				And(util.IsEpoch(1)),
 		).Then(
 			testlib.DeliverAllFromSet(sm.Set("reorderedPropose")),
@@ -45,18 +45,16 @@ func DelayProposeForPProperty() *sm.StateMachine {
 	start := property.Builder()
 
 	start.On(
-		sm.IsMessageReceive().
-			And(util.IsPropose()).
-			And(util.IsEpoch(1)).
-			And(sm.IsMessageTo(types.ReplicaID("3"))),
+		sm.IsMessageReceive().And(sm.IsEventOf(types.ReplicaID("3"))).
+			And(util.IsWrite()).
+			And(util.IsEpoch(1)),
 		"Epoch1ProposeReceived",
 	).On(
-		sm.IsMessageReceive().
+		sm.IsMessageReceive().And(sm.IsEventOf(types.ReplicaID("3"))).
 			And(util.IsPropose()).
-			And(util.IsEpoch(0)).
-			And(sm.IsMessageTo(types.ReplicaID("3"))),
-		"Epoch0ProposeReceived",
-	).MarkSuccess()
+			And(util.IsEpoch(0)),
+		sm.SuccessStateLabel,
+	)
 
 	return property
 }

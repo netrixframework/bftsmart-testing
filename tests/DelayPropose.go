@@ -9,14 +9,13 @@ import (
 	"github.com/netrixframework/netrix/types"
 )
 
-func DelayPropose() *testlib.TestCase {
+func DelayProposeSameEpoch() *testlib.TestCase {
 	stateMachine := sm.NewStateMachine()
 
 	filters := testlib.NewFilterSet()
 
 	filters.AddFilter(
-		testlib.If(util.IsPropose().And(sm.IsMessageTo(types.ReplicaID("3")))).Then(
-			testlib.StoreInSet(sm.Set("delayedPropose")),
+		testlib.If(util.IsPropose().And(sm.IsMessageTo(types.ReplicaID("3")))).Then(testlib.StoreInSet(sm.Set("delayedPropose")),
 			testlib.DropMessage()),
 	)
 
@@ -25,11 +24,11 @@ func DelayPropose() *testlib.TestCase {
 			Then(testlib.DeliverAllFromSet(sm.Set("delayedPropose"))),
 	)
 
-	testCase := testlib.NewTestCase("DelayPropose", 2*time.Minute, stateMachine, filters)
+	testCase := testlib.NewTestCase("DelayProposeSameEpoch", 2*time.Minute, stateMachine, filters)
 	return testCase
 }
 
-func DelayProposeProperty() *sm.StateMachine {
+func DelayProposeSameEpochProperty() *sm.StateMachine {
 	property := sm.NewStateMachine()
 	property.Builder().On(
 		sm.IsEventOf(types.ReplicaID("3")).And(util.IsDecided()),

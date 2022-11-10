@@ -34,7 +34,7 @@ func PrevEpochProposal() *testlib.TestCase {
 		testlib.If(util.IsNewEpoch()).Then(testlib.DeliverAllFromSet(sm.Set("delayedProposals"))),
 	)
 
-	testCase := testlib.NewTestCase("DelayedPropose", 2*time.Minute, DelayProposeProperty(), filters)
+	testCase := testlib.NewTestCase("DelayedPropose", 2*time.Minute, PrevEpochProposalProperty(), filters)
 	return testCase
 }
 
