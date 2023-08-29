@@ -2,10 +2,8 @@ module github.com/netrixframework/bftsmart-testing
 
 go 1.18
 
-replace github.com/netrixframework/netrix v0.2.8 => /Users/srinidhin/Local/go/src/github.com/netrixframework/netrix
-
 require (
-	github.com/netrixframework/netrix v0.2.8
+	github.com/netrixframework/netrix v0.2.9
 	github.com/spf13/cobra v1.6.0
 )
 

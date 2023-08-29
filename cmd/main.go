@@ -7,8 +7,8 @@ func RootCmd() *cobra.Command {
 		Use: "bftsmart-testing",
 	}
 	cmd.CompletionOptions.DisableDefaultCmd = true
-	cmd.AddCommand(unittestCmd)
-	cmd.AddCommand(strategyCmd())
+	cmd.AddCommand(PCTStrategy())
+	cmd.AddCommand(PCTTestStrategy())
 	cmd.AddCommand(ClientCmd())
 	return cmd
 }
